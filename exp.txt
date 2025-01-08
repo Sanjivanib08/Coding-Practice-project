@@ -1,0 +1,196 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios"; // Make sure axios is installed
+import "../styles/Dashboard.css"; // Link to your dashboard styles
+
+// Modal component for creating a custom bundle
+const CreateBundleModal = ({ closeModal }) => {
+  const [bundleName, setBundleName] = useState("");
+  const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const [questionsByTopic, setQuestionsByTopic] = useState({});
+  const [userId, setUserId] = useState("user-id"); // Replace with actual user ID
+
+  useEffect(() => {
+    // Fetch available questions grouped by topic
+    const fetchQuestions = async () => {
+      try {
+        const response = await axios.get("/api/questions"); // Modify endpoint to fetch questions
+        const groupedQuestions = groupQuestionsByTopic(response.data);
+        setQuestionsByTopic(groupedQuestions);
+      } catch (error) {
+        console.error("Error fetching questions:", error);
+      }
+    };
+    fetchQuestions();
+  }, []);
+
+  const groupQuestionsByTopic = (questions) => {
+    return questions.reduce((acc, question) => {
+      const { topic } = question;
+      if (!acc[topic]) acc[topic] = [];
+      acc[topic].push(question);
+      return acc;
+    }, {});
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post("/api/bundles", {
+        name: bundleName,
+        questions: selectedQuestions,
+        userId: userId,
+      });
+      console.log("Bundle created:", response.data);
+      closeModal(); // Close modal after saving
+    } catch (error) {
+      console.error("Error creating bundle:", error);
+    }
+  };
+
+  return (
+    <div className="modal">
+      <div className="modal-content">
+        <h2>Create Custom Bundle</h2>
+        <input
+          type="text"
+          placeholder="Bundle Name"
+          value={bundleName}
+          onChange={(e) => setBundleName(e.target.value)}
+        />
+        <div className="question-select">
+          <h3>Select Questions</h3>
+          {Object.keys(questionsByTopic).map((topic) => (
+            <div key={topic} className="topic-section">
+              <h4>{topic}</h4>
+              <select
+                multiple
+                value={selectedQuestions}
+                onChange={(e) =>
+                  setSelectedQuestions(
+                    Array.from(e.target.selectedOptions, (option) => option.value)
+                  )
+                }
+              >
+                {questionsByTopic[topic].map((question) => (
+                  <option key={question._id} value={question._id}>
+                    {question.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ))}
+        </div>
+        <button onClick={handleSubmit}>Save Bundle</button>
+        <button onClick={closeModal}>Close</button>
+      </div>
+    </div>
+  );
+};
+
+const Dashboard = () => {
+  const [bundles, setBundles] = useState([]);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [practiceMode, setPracticeMode] = useState("Random Topic"); // Default practice mode
+
+  useEffect(() => {
+    const fetchBundles = async () => {
+      try {
+        const response = await axios.get("/api/bundles/user-id"); // Replace with actual user ID
+        setBundles(response.data);
+      } catch (error) {
+        console.error("Error fetching bundles:", error);
+      }
+    };
+    fetchBundles();
+  }, []);
+
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+
+  const deleteBundle = async (bundleId) => {
+    try {
+      await axios.delete(`/api/bundles/${bundleId}`);
+      setBundles(bundles.filter((bundle) => bundle._id !== bundleId));
+    } catch (error) {
+      console.error("Error deleting bundle:", error);
+    }
+  };
+
+  const togglePracticeMode = () => {
+    setPracticeMode((prevMode) =>
+      prevMode === "Random Topic" ? "Series Test Mode" : "Random Topic"
+    );
+  };
+
+  return (
+    <div className="dashboard-container">
+      {/* Sidebar */}
+      <div className="sidebar">
+        <div className="logo">Coding Practice</div>
+        <div className="menu">
+          <div className="menu-item">Practice</div>
+          <div className="menu-item">Topics</div>
+          <div className="menu-item">Settings</div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="main-content">
+        {/* Header */}
+        <div className="header">
+          <h1>Coding Practice Dashboard</h1>
+          <div className="progress-bar-container">
+            <div className="progress-bar-label">Overall Progress: 0%</div>
+            <div className="progress-bar">
+              <span style={{ width: "0%" }}></span>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="quick-actions">
+          <button className="action-button" onClick={togglePracticeMode}>
+            Toggle Practice Mode: {practiceMode}
+          </button>
+          <button className="action-button">Add New Problem</button>
+        </div>
+
+        {/* Problem Bundles */}
+        <div className="problem-bundles">
+          <h2>Problem Bundles</h2>
+          {bundles.map((bundle) => (
+            <div key={bundle._id} className="bundle">
+              <h3>{bundle.name}</h3>
+              <p>Progress: 50%</p>
+              <button className="action-button">Practice</button>
+            </div>
+          ))}
+        </div>
+
+        {/* Custom Bundles Section */}
+        <div className="custom-bundles">
+          <h2>Custom Bundles</h2>
+          <button className="action-button" onClick={openModal}>
+            Create Custom Bundle
+          </button>
+          <div className="bundle-list">
+            {bundles.map((bundle) => (
+              <div key={bundle._id} className="bundle-item">
+                <h3>{bundle.name}</h3>
+                <p>Progress: 0%</p>
+                <button className="action-button">Practice</button>
+                <button className="action-button" onClick={() => deleteBundle(bundle._id)}>
+                  Delete
+                </button>
+                <button className="action-button">Edit</button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {isModalOpen && <CreateBundleModal closeModal={closeModal} />}
+    </div>
+  );
+};
+
+export default Dashboard;

@@ -1,0 +1,170 @@
+/* AddProblem.css */
+
+/* General Styles */
+.add-problem-container {
+    max-width: 800px;
+    margin: 50px auto;
+    width:100%;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    box-sizing: border-box;
+  }
+  
+  h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 30px;
+    font-weight: 600;
+  }
+  
+  h3 {
+    font-size: 1.8rem;
+    color: #444;
+    margin-top: 30px;
+  }
+  
+  h4 {
+    font-size: 1.5rem;
+    color: #444;
+    margin-top: 20px;
+  }
+  
+  /* Form Group Styles */
+  
+  
+  .form-group label {
+    display: inline-flex; 
+    align-items: center; /* Vertically center the checkbox and label */
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 0; /* Remove extra margin at the bottom */
+  }
+  
+  
+  label {
+    font-size: 1.2rem;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 8px;
+  }
+  
+  /* Input, Textarea, Select Styles */
+  input, textarea, select {
+    padding: 15px;
+    font-size: 1.1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  input:focus, textarea:focus, select:focus {
+    border-color: #4caf50;
+    outline: none;
+  }
+  
+  /* Button Styles */
+  button {
+    padding: 12px 25px;
+    font-size: 1.2rem;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Add and Remove Test Case Buttons */
+  .add-test-case-btn, .remove-test-case-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .add-test-case-btn:hover, .remove-test-case-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  /* AI Test Cases Styling */
+  .ai-test-cases {
+    margin-top: 30px;
+  }
+  
+  .ai-test-case {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+  }
+  
+  .ai-test-case div {
+    margin-bottom: 5px;
+  }
+  
+  /* Test Case Container */
+  .test-cases-container {
+    margin-top: 30px;
+  }
+  
+  /* Test Case Styling */
+  .test-case {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .test-case .form-group {
+    margin-bottom: 10px;
+  }
+  
+  .test-case textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  .test-case button {
+    width: auto;
+    margin-left: auto;
+    display: block;
+  }
+  
+  /* Checkbox Styles */
+  input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  label input[type="checkbox"] {
+    display: inline-block;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  
+  .submit-btn {
+    background-color: #28a745;
+    color: #fff;
+    font-weight: 600;
+  }
+  
+  .submit-btn:hover {
+    background-color: #218838;
+  }
+  
